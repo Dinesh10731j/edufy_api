@@ -11,3 +11,10 @@ export class userDto {
   @MinLength(8, { message: 'confirmPassword must be at least 8 characters' })
   confirmPassword: string;
 }
+
+export class loginDto {
+  @IsEmail()
+  email: string;
+  @IsString()
+  password: string;
+}
