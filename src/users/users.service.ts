@@ -1,17 +1,20 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { userDto as UserDto } from 'src/dto/users.dto';
-import { loginDto as LoginDto } from 'src/dto/users.dto';
+import { contactDto, loginDto as LoginDto } from 'src/dto/users.dto';
 import * as bcrypt from 'bcrypt';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from 'src/schemas/user.schema';
 import { Model } from 'mongoose';
 import { JwtService } from '@nestjs/jwt';
+import Contact from 'src/schemas/contact.schema';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectModel('User') private readonly userModel: Model<User>,
     private readonly jwtService: JwtService,
+    @InjectModel('Contact')
+    private readonly contactModel: Model<typeof Contact>,
   ) {}
 
   getHello(): string {
@@ -84,5 +87,34 @@ export class UsersService {
   private generateJwtToken(user: User): string {
     const payload = { sub: user._id, email: user.email };
     return this.jwtService.sign(payload);
+  }
+
+  async Contact(contact: contactDto): Promise<{ message: string }> {
+    const {
+      fullName,
+      phone,
+      organization,
+      inquiryPurpose,
+      message,
+      email,
+      description,
+    } = contact;
+    if (
+      !fullName ||
+      !phone ||
+      !organization ||
+      !inquiryPurpose ||
+      !message ||
+      !email ||
+      !description
+    ) {
+      throw new HttpException(
+        { message: 'All fields are required' },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    const contacts = await this.contactModel.create(contact);
+    await contacts.save();
+    return { message: 'Contact information received' };
   }
 }
