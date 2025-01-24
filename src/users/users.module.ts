@@ -4,12 +4,16 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 import { UserSchema } from 'src/schemas/user.schema';
+import { ContactSchema } from 'src/schemas/contact.schema';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
+    MongooseModule.forFeature([
+      { name: 'User', schema: UserSchema },
+      { name: 'Contact', schema: ContactSchema },
+    ]),
     JwtModule.register({
-      secret: 'your-secret-key', // Replace with your secret key
+      secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '1h' }, // Token expiration
     }),
   ],

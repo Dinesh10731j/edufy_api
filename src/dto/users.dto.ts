@@ -18,3 +18,19 @@ export class loginDto {
   @IsString()
   password: string;
 }
+export class contactDto {
+  @IsString()
+  inquiryPurpose: string;
+  @IsString()
+  description: string;
+  @IsString()
+  fullName: string;
+  @IsEmail()
+  email: string;
+  @IsString()
+  organization: string;
+  @IsString()
+  phone: string;
+  @IsString()
+  message: string;
+}

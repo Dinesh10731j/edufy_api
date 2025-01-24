@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { userDto as UserDto } from 'src/dto/users.dto';
+import { contactDto, userDto as UserDto } from 'src/dto/users.dto';
 import { loginDto as LoginDto } from 'src/dto/users.dto';
 @Controller('users')
 export class UsersController {
@@ -19,5 +19,9 @@ export class UsersController {
   @Post('login')
   login(@Body() user: LoginDto): Promise<{ token: string }> {
     return this.userService.login(user);
+  }
+  @Post('contact')
+  contact(@Body() contact: contactDto): Promise<{ message: string }> {
+    return this.userService.Contact(contact);
   }
 }
